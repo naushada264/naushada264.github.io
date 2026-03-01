@@ -3,290 +3,1089 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Shaikh Naushad — Azure Data Engineer</title>
-  <link rel="stylesheet" href="style-v5.css"/>
+  <title>Shaikh Naushad — The Data Pirate</title>
+  <link href="https://fonts.googleapis.com/css2?family=Pirata+One&family=Cinzel:wght@400;600;700;900&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ocean:      #0a1628;
+      --ocean2:     #0d1f38;
+      --ocean3:     #122748;
+      --gold:       #f0c040;
+      --gold2:      #ffd700;
+      --gold3:      #c89a1a;
+      --red:        #cc2222;
+      --red2:       #e63030;
+      --cream:      #f5e6c8;
+      --cream2:     #e8d5a8;
+      --parchment:  #d4b878;
+      --ink:        #1a0a00;
+      --muted:      #8a9db5;
+      --border:     rgba(240,192,64,0.25);
+      --border2:    rgba(240,192,64,0.12);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--ocean);
+      color: var(--cream);
+      font-family: 'Libre Baskerville', serif;
+      font-size: 15px;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* Ocean wave background pattern */
+    body::before {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background:
+        radial-gradient(ellipse at 20% 0%, rgba(240,192,64,0.07) 0%, transparent 50%),
+        radial-gradient(ellipse at 80% 100%, rgba(204,34,34,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    /* Repeating wave lines */
+    body::after {
+      content: '';
+      position: fixed; inset: 0; z-index: 0;
+      background-image: repeating-linear-gradient(
+        -45deg,
+        transparent,
+        transparent 40px,
+        rgba(240,192,64,0.015) 40px,
+        rgba(240,192,64,0.015) 42px
+      );
+      pointer-events: none;
+    }
+
+    /* ── NAV: Captain's Log ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(10,22,40,0.95);
+      backdrop-filter: blur(16px);
+      border-bottom: 2px solid var(--border);
+      padding: 0 40px;
+      display: flex; align-items: center; gap: 6px;
+    }
+    nav::before {
+      content: '';
+      position: absolute; bottom: -4px; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, transparent, var(--gold), var(--red), var(--gold), transparent);
+    }
+    .nav-brand {
+      font-family: 'Pirata One', cursive;
+      font-size: 22px; color: var(--gold);
+      letter-spacing: 0.05em; margin-right: auto;
+      text-shadow: 0 0 20px rgba(240,192,64,0.4);
+      padding: 14px 0;
+    }
+    .nav-brand em { color: var(--red2); font-style: normal; }
+    .nav-links { display: flex; gap: 0; }
+    .nav-links a {
+      font-family: 'Special Elite', cursive;
+      font-size: 12px; color: var(--muted);
+      text-decoration: none; padding: 16px 16px;
+      letter-spacing: 0.06em; text-transform: uppercase;
+      border-bottom: 3px solid transparent;
+      transition: all 0.2s;
+    }
+    .nav-links a:hover { color: var(--gold); border-bottom-color: var(--gold); }
+    .nav-cta {
+      font-family: 'Special Elite', cursive;
+      background: var(--red); color: var(--cream);
+      padding: 9px 22px; border-radius: 4px; text-decoration: none;
+      font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase;
+      border: 2px solid var(--red2); margin-left: 12px;
+      transition: all 0.2s;
+    }
+    .nav-cta:hover { background: var(--red2); transform: translateY(-1px); box-shadow: 0 4px 20px rgba(204,34,34,0.4); }
+
+    /* ── SECTION UTILITY ── */
+    section {
+      position: relative; z-index: 1;
+      max-width: 1100px; margin: 0 auto;
+      padding: 80px 24px;
+    }
+
+    .sec-header {
+      display: flex; align-items: center; gap: 16px; margin-bottom: 60px;
+    }
+    .sec-num {
+      font-family: 'Pirata One', cursive;
+      font-size: 14px; color: var(--red);
+      letter-spacing: 0.1em;
+    }
+    .sec-title {
+      font-family: 'Cinzel', serif;
+      font-size: 30px; font-weight: 700; color: var(--gold);
+      text-shadow: 0 2px 20px rgba(240,192,64,0.2);
+      letter-spacing: 0.04em;
+    }
+    .sec-line {
+      flex: 1; height: 1px;
+      background: linear-gradient(90deg, var(--border), transparent);
+    }
+    .sec-ornament {
+      color: var(--gold3); font-size: 18px;
+    }
+
+    /* ── HERO: WANTED POSTER ── */
+    .hero-section {
+      position: relative; z-index: 1;
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      padding: 60px 24px;
+      overflow: hidden;
+    }
+
+    /* Ocean background for hero */
+    .hero-ocean {
+      position: absolute; inset: 0;
+      background: linear-gradient(180deg, #050d1a 0%, #0a1628 40%, #0d1f38 100%);
+    }
+    .hero-ocean-waves {
+      position: absolute; bottom: 0; left: 0; right: 0; height: 200px;
+      background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,60 C150,100 350,0 600,60 C850,120 1050,20 1200,60 L1200,120 L0,120 Z' fill='rgba(13,31,56,0.8)'/%3E%3C/svg%3E") no-repeat bottom center;
+      background-size: cover;
+    }
+
+    /* Compass rose */
+    .compass {
+      position: absolute; top: 60px; right: 60px;
+      width: 100px; height: 100px; opacity: 0.12;
+      animation: spin 60s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .compass svg { width: 100%; height: 100%; }
+
+    .hero-inner {
+      position: relative; z-index: 2;
+      display: flex; align-items: center; gap: 60px;
+      max-width: 1000px; flex-wrap: wrap; justify-content: center;
+    }
+
+    /* Wanted Poster */
+    .wanted-poster {
+      background: var(--cream);
+      color: var(--ink);
+      border: 6px solid var(--gold3);
+      border-radius: 4px;
+      padding: 32px 28px;
+      width: 320px; flex-shrink: 0;
+      box-shadow:
+        0 0 0 2px var(--gold3),
+        0 0 0 8px rgba(10,22,40,0.6),
+        0 0 0 10px var(--gold3),
+        0 30px 80px rgba(0,0,0,0.6),
+        inset 0 0 60px rgba(200,154,26,0.15);
+      text-align: center;
+      position: relative;
+      transform: rotate(-1.5deg);
+      transition: transform 0.3s;
+    }
+    .wanted-poster:hover { transform: rotate(0deg) scale(1.02); }
+
+    /* Aged paper texture */
+    .wanted-poster::before {
+      content: '';
+      position: absolute; inset: 0;
+      background:
+        radial-gradient(circle at 20% 30%, rgba(200,154,26,0.1) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(200,154,26,0.08) 0%, transparent 50%);
+      pointer-events: none;
+    }
+
+    .poster-marine { font-family: 'Cinzel', serif; font-size: 10px; font-weight: 700; letter-spacing: 0.4em; color: #4a3a1a; margin-bottom: 6px; }
+    .poster-wanted { font-family: 'Pirata One', cursive; font-size: 56px; color: var(--red); line-height: 1; margin-bottom: 4px; text-shadow: 2px 2px 0 rgba(150,0,0,0.3); }
+    .poster-doa { font-family: 'Cinzel', serif; font-size: 11px; font-weight: 700; letter-spacing: 0.2em; color: var(--ink); margin-bottom: 16px; }
+
+    .poster-photo {
+      width: 200px; height: 200px; margin: 0 auto 16px;
+      border: 3px solid var(--gold3);
+      background: linear-gradient(135deg, #1a0a2e 0%, #0a1628 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 80px; overflow: hidden; position: relative;
+    }
+    .poster-photo::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(240,192,64,0.05), transparent);
+    }
+
+    .poster-name { font-family: 'Cinzel', serif; font-size: 22px; font-weight: 900; color: var(--ink); letter-spacing: 0.08em; line-height: 1.2; margin-bottom: 4px; }
+    .poster-alias { font-family: 'Special Elite', cursive; font-size: 12px; color: #6a4a1a; margin-bottom: 16px; font-style: italic; }
+
+    .poster-divider { border: none; border-top: 2px solid var(--gold3); margin: 12px 0; }
+
+    .poster-bounty-label { font-family: 'Cinzel', serif; font-size: 10px; letter-spacing: 0.2em; color: #6a4a1a; }
+    .poster-bounty { font-family: 'Pirata One', cursive; font-size: 32px; color: var(--ink); line-height: 1.1; }
+    .poster-currency { font-size: 13px; color: #4a3a1a; font-family: 'Cinzel', serif; letter-spacing: 0.1em; }
+
+    /* Hero text side */
+    .hero-text { max-width: 480px; }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: 'Special Elite', cursive; font-size: 12px;
+      color: var(--teal, #00d4aa); letter-spacing: 0.08em;
+      border: 1px solid rgba(0,212,170,0.4); padding: 5px 14px; border-radius: 2px;
+      margin-bottom: 24px; color: var(--gold2);
+      border-color: var(--border); background: rgba(240,192,64,0.05);
+    }
+    .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: #00d4aa; animation: pulse 2s infinite; }
+
+    .hero-heading {
+      font-family: 'Cinzel', serif;
+      font-size: clamp(28px, 4vw, 44px); font-weight: 900;
+      line-height: 1.1; margin-bottom: 16px;
+      color: var(--gold);
+      text-shadow: 0 2px 30px rgba(240,192,64,0.25);
+      letter-spacing: 0.03em;
+    }
+    .hero-heading .red { color: var(--red2); }
+
+    .hero-subtitle {
+      font-family: 'Special Elite', cursive;
+      font-size: 14px; color: var(--muted);
+      letter-spacing: 0.08em; margin-bottom: 20px;
+    }
+    .hero-desc { font-size: 15px; color: rgba(245,230,200,0.75); line-height: 1.75; margin-bottom: 32px; }
+
+    .hero-stats {
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 16px; margin-bottom: 32px;
+    }
+    .hero-stat { text-align: center; }
+    .hero-stat-num {
+      font-family: 'Pirata One', cursive; font-size: 34px; color: var(--gold);
+      line-height: 1; text-shadow: 0 0 20px rgba(240,192,64,0.3);
+    }
+    .hero-stat-label { font-size: 11px; color: var(--muted); letter-spacing: 0.06em; }
+
+    .hero-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn-gold {
+      background: var(--gold); color: var(--ink);
+      padding: 12px 28px; border-radius: 3px; text-decoration: none;
+      font-family: 'Cinzel', serif; font-weight: 700; font-size: 13px;
+      letter-spacing: 0.08em; border: 2px solid var(--gold2);
+      transition: all 0.2s;
+    }
+    .btn-gold:hover { background: var(--gold2); transform: translateY(-2px); box-shadow: 0 6px 24px rgba(240,192,64,0.4); }
+    .btn-scroll {
+      border: 2px solid var(--border); color: var(--muted);
+      padding: 12px 28px; border-radius: 3px; text-decoration: none;
+      font-family: 'Cinzel', serif; font-size: 13px; letter-spacing: 0.06em;
+      transition: all 0.2s;
+    }
+    .btn-scroll:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── WAVE DIVIDER ── */
+    .wave-divider {
+      position: relative; z-index: 1;
+      width: 100%; overflow: hidden; line-height: 0;
+      height: 60px;
+    }
+    .wave-divider svg { display: block; width: 100%; height: 60px; }
+
+    /* ── ABOUT ── */
+    .about-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: start;
+    }
+    .about-text p { margin-bottom: 16px; color: rgba(245,230,200,0.8); }
+    .about-text strong { color: var(--gold); font-weight: 700; }
+    .quote-block {
+      border-left: 3px solid var(--gold);
+      padding: 14px 20px; margin-top: 24px;
+      background: rgba(240,192,64,0.04);
+      font-style: italic; font-size: 16px; color: var(--gold2);
+      font-family: 'Pirata One', cursive; letter-spacing: 0.05em;
+    }
+
+    .info-cards { display: flex; flex-direction: column; gap: 12px; }
+    .info-card {
+      display: flex; align-items: center; gap: 14px;
+      padding: 14px 18px;
+      border: 1px solid var(--border2); border-radius: 4px;
+      background: rgba(240,192,64,0.03);
+      transition: all 0.25s;
+    }
+    .info-card:hover { border-color: var(--border); background: rgba(240,192,64,0.06); transform: translateX(4px); }
+    .info-icon { font-size: 22px; flex-shrink: 0; width: 36px; text-align: center; }
+    .info-card h4 { font-family: 'Special Elite', cursive; font-size: 11px; color: var(--gold3); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 2px; }
+    .info-card p { font-size: 13px; color: rgba(245,230,200,0.8); margin: 0; }
+
+    /* ── SKILLS: Devil Fruit Abilities ── */
+    #skills { background: transparent; }
+
+    .devil-fruits {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+      margin-bottom: 48px;
+    }
+    .devil-fruit {
+      border: 1px solid var(--border2); border-radius: 6px;
+      padding: 22px; background: rgba(240,192,64,0.03);
+      transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .devil-fruit::before {
+      content: '';
+      position: absolute; top: 0; left: 0; right: 0; height: 2px;
+      background: linear-gradient(90deg, var(--red), var(--gold));
+      transform: scaleX(0); transform-origin: left; transition: transform 0.3s;
+    }
+    .devil-fruit:hover { border-color: var(--border); transform: translateY(-3px); background: rgba(240,192,64,0.06); }
+    .devil-fruit:hover::before { transform: scaleX(1); }
+
+    .fruit-icon { font-size: 28px; margin-bottom: 10px; }
+    .fruit-name { font-family: 'Cinzel', serif; font-size: 14px; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+    .fruit-desc { font-size: 12px; color: var(--muted); margin-bottom: 14px; line-height: 1.55; }
+
+    .fruit-bar { height: 3px; background: rgba(255,255,255,0.07); border-radius: 2px; overflow: hidden; }
+    .fruit-fill {
+      height: 100%; width: 0; border-radius: 2px;
+      background: linear-gradient(90deg, var(--red), var(--gold));
+      transition: width 1.4s cubic-bezier(0.4,0,0.2,1);
+    }
+
+    /* Tag cloud */
+    .tech-scroll {
+      border: 1px solid var(--border2); border-radius: 6px;
+      padding: 24px; background: rgba(240,192,64,0.02);
+    }
+    .tech-scroll-title {
+      font-family: 'Special Elite', cursive; font-size: 12px;
+      color: var(--gold3); letter-spacing: 0.1em; text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+    .tech-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .tech-tag {
+      font-family: 'Special Elite', cursive; font-size: 12px;
+      border: 1px solid var(--border); color: var(--cream2);
+      padding: 5px 14px; border-radius: 3px; cursor: default;
+      transition: all 0.2s; background: rgba(240,192,64,0.03);
+    }
+    .tech-tag:hover { border-color: var(--gold); color: var(--gold); background: rgba(240,192,64,0.08); }
+    .tech-tag.strong { color: var(--gold2); border-color: rgba(240,192,64,0.35); background: rgba(240,192,64,0.06); }
+
+    /* ── EXPERIENCE: The Grand Line ── */
+    #experience { background: rgba(13,31,56,0.4); }
+
+    .grand-line {
+      position: relative;
+      padding-left: 36px;
+    }
+    .grand-line::before {
+      content: '';
+      position: absolute; left: 14px; top: 8px; bottom: 8px; width: 2px;
+      background: linear-gradient(180deg, var(--gold), var(--red), var(--gold3), transparent);
+    }
+
+    .voyage-stop {
+      position: relative; margin-bottom: 48px;
+    }
+    .voyage-stop:last-child { margin-bottom: 0; }
+
+    .voyage-dot {
+      position: absolute; left: -31px; top: 6px;
+      width: 16px; height: 16px; border-radius: 50%;
+      border: 2px solid var(--gold3); background: var(--ocean2);
+      transition: all 0.3s;
+    }
+    .voyage-dot.current { background: var(--gold); border-color: var(--gold2); box-shadow: 0 0 16px rgba(240,192,64,0.5); animation: glow 2s ease-in-out infinite; }
+    @keyframes glow { 0%,100% { box-shadow: 0 0 8px rgba(240,192,64,0.4); } 50% { box-shadow: 0 0 24px rgba(240,192,64,0.8); } }
+
+    .voyage-card {
+      border: 1px solid var(--border2); border-radius: 6px;
+      padding: 24px; background: rgba(240,192,64,0.025);
+      transition: all 0.3s;
+    }
+    .voyage-card:hover { border-color: var(--border); background: rgba(240,192,64,0.05); }
+    .voyage-card.current-card { border-color: rgba(240,192,64,0.3); }
+
+    .voyage-meta { display: flex; gap: 10px; align-items: center; margin-bottom: 8px; flex-wrap: wrap; }
+    .voyage-period { font-family: 'Special Elite', cursive; font-size: 12px; color: var(--muted); }
+    .voyage-domain {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      background: rgba(204,34,34,0.15); border: 1px solid rgba(204,34,34,0.3);
+      color: var(--red2); padding: 2px 8px; border-radius: 3px;
+    }
+    .voyage-badge {
+      font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      background: rgba(240,192,64,0.15); border: 1px solid rgba(240,192,64,0.3);
+      color: var(--gold); padding: 2px 10px; border-radius: 3px; margin-left: auto;
+    }
+
+    .voyage-role { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; color: var(--gold); margin-bottom: 4px; }
+    .voyage-company { font-size: 13px; color: rgba(245,230,200,0.7); margin-bottom: 16px; font-style: italic; }
+
+    .voyage-points { list-style: none; }
+    .voyage-points li {
+      font-size: 13.5px; color: rgba(245,230,200,0.75);
+      padding: 5px 0 5px 20px; position: relative; border-bottom: 1px solid rgba(240,192,64,0.05);
+    }
+    .voyage-points li:last-child { border-bottom: none; }
+    .voyage-points li::before { content: '⚓'; position: absolute; left: 0; font-size: 11px; top: 7px; }
+
+    /* ── PROJECTS: Treasure Chest ── */
+    .treasure-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 40px;
+    }
+    .treasure-card {
+      border: 2px solid var(--border); border-radius: 6px;
+      padding: 28px; background: rgba(240,192,64,0.03);
+      position: relative; overflow: hidden; transition: all 0.3s;
+    }
+    .treasure-card::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: linear-gradient(135deg, rgba(240,192,64,0.04), transparent);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .treasure-card:hover { border-color: rgba(240,192,64,0.5); transform: translateY(-4px); box-shadow: 0 16px 50px rgba(0,0,0,0.4); }
+    .treasure-card:hover::before { opacity: 1; }
+
+    .treasure-num {
+      font-family: 'Pirata One', cursive; font-size: 42px;
+      color: rgba(240,192,64,0.12); position: absolute; top: 16px; right: 20px;
+      line-height: 1;
+    }
+    .treasure-icon { font-size: 32px; margin-bottom: 14px; }
+    .treasure-title { font-family: 'Cinzel', serif; font-size: 20px; font-weight: 700; color: var(--gold); margin-bottom: 10px; }
+    .treasure-desc { font-size: 13px; color: rgba(245,230,200,0.7); line-height: 1.65; margin-bottom: 18px; }
+    .treasure-tech { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 18px; }
+    .treasure-tech span {
+      font-family: 'Special Elite', cursive; font-size: 11px;
+      color: var(--gold3); border: 1px solid rgba(200,154,26,0.3);
+      background: rgba(200,154,26,0.07); padding: 3px 10px; border-radius: 3px;
+    }
+    .treasure-link {
+      font-family: 'Cinzel', serif; font-size: 12px; font-weight: 700;
+      color: var(--gold2); text-decoration: none;
+      display: inline-flex; align-items: center; gap: 6px;
+      transition: gap 0.2s;
+    }
+    .treasure-link:hover { gap: 10px; }
+
+    /* Power BI */
+    .powerbi-treasure {
+      border: 2px solid var(--border); border-radius: 6px;
+      padding: 24px; background: rgba(240,192,64,0.03);
+    }
+    .powerbi-header-op {
+      display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+    }
+    .powerbi-dot-op { width: 8px; height: 8px; border-radius: 50%; background: var(--gold); animation: pulse 2s infinite; }
+    .powerbi-label-op { font-family: 'Special Elite', cursive; font-size: 12px; color: var(--muted); }
+    .powerbi-title-op { font-family: 'Cinzel', serif; font-size: 18px; font-weight: 700; color: var(--gold); }
+    .powerbi-iframe-wrap { width: 100%; height: 340px; border-radius: 4px; overflow: hidden; border: 1px solid var(--border2); }
+    .powerbi-iframe-wrap iframe { width: 100%; height: 100%; border: none; }
+    .powerbi-footer-op { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 12px; color: var(--muted); }
+    .powerbi-footer-op a { color: var(--gold); text-decoration: none; font-family: 'Cinzel', serif; font-size: 12px; }
+    .powerbi-footer-op a:hover { text-decoration: underline; }
+
+    /* ── CERTIFICATIONS: Ship's Medals ── */
+    .medals-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+    .medal-card {
+      border: 2px solid var(--border); border-radius: 6px;
+      padding: 28px; text-align: center;
+      background: rgba(240,192,64,0.03);
+      transition: all 0.3s; position: relative; overflow: hidden;
+    }
+    .medal-card::after {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(circle at 50% 0%, rgba(240,192,64,0.08), transparent 60%);
+      opacity: 0; transition: opacity 0.3s;
+    }
+    .medal-card:hover { border-color: rgba(240,192,64,0.5); transform: translateY(-4px); box-shadow: 0 12px 40px rgba(0,0,0,0.4); }
+    .medal-card:hover::after { opacity: 1; }
+
+    .medal-icon { font-size: 44px; margin-bottom: 16px; display: block; }
+    .medal-name { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+    .medal-exam { font-size: 13px; color: var(--muted); margin-bottom: 8px; font-family: 'Special Elite', cursive; }
+    .medal-issuer {
+      display: inline-block; font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
+      text-transform: uppercase; color: var(--red2);
+      background: rgba(204,34,34,0.1); border: 1px solid rgba(204,34,34,0.25);
+      padding: 3px 12px; border-radius: 3px;
+    }
+
+    /* ── EDUCATION ── */
+    .edu-scrolls { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+    .edu-scroll {
+      border: 1px solid var(--border2); border-radius: 6px;
+      padding: 22px; background: rgba(240,192,64,0.025);
+      transition: all 0.3s;
+    }
+    .edu-scroll:hover { border-color: var(--border); transform: translateY(-2px); }
+    .edu-type-label { font-family: 'Special Elite', cursive; font-size: 10px; color: var(--red2); letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 8px; }
+    .edu-degree { font-family: 'Cinzel', serif; font-size: 16px; font-weight: 700; color: var(--gold); margin-bottom: 6px; }
+    .edu-school { font-size: 12px; color: rgba(245,230,200,0.65); margin-bottom: 12px; }
+    .edu-badges { display: flex; gap: 8px; flex-wrap: wrap; }
+    .edu-badge {
+      font-family: 'Special Elite', cursive; font-size: 11px;
+      color: var(--gold3); border: 1px solid rgba(200,154,26,0.3);
+      background: rgba(200,154,26,0.06); padding: 3px 10px; border-radius: 3px;
+    }
+
+    /* ── CONTACT ── ── Den Den Mushi ── */
+    #contact { background: rgba(13,31,56,0.5); }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: start; }
+    .contact-left h3 {
+      font-family: 'Cinzel', serif; font-size: 32px; font-weight: 900;
+      color: var(--gold); line-height: 1.15; margin-bottom: 16px;
+      letter-spacing: 0.03em;
+    }
+    .contact-left p { font-size: 14px; color: rgba(245,230,200,0.7); line-height: 1.7; margin-bottom: 24px; }
+    .domain-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .domain-tag {
+      font-family: 'Cinzel', serif; font-size: 11px; font-weight: 700;
+      color: var(--gold3); border: 1px solid var(--border);
+      padding: 4px 14px; border-radius: 3px; letter-spacing: 0.06em;
+      background: rgba(240,192,64,0.04); transition: all 0.2s;
+    }
+    .domain-tag:hover { border-color: var(--gold); color: var(--gold); background: rgba(240,192,64,0.08); }
+
+    .contact-links { display: flex; flex-direction: column; gap: 12px; }
+    .contact-link {
+      display: flex; align-items: center; gap: 16px;
+      border: 1px solid var(--border2); border-radius: 6px;
+      padding: 16px 20px; text-decoration: none;
+      background: rgba(240,192,64,0.02); transition: all 0.3s;
+    }
+    .contact-link:hover { border-color: var(--border); background: rgba(240,192,64,0.06); transform: translateX(4px); }
+    .cl-icon { font-size: 22px; flex-shrink: 0; width: 36px; text-align: center; }
+    .cl-label { font-family: 'Special Elite', cursive; font-size: 10px; color: var(--gold3); letter-spacing: 0.1em; text-transform: uppercase; }
+    .cl-val { font-size: 14px; color: var(--cream); font-weight: 700; }
+
+    /* ── FOOTER ── */
+    footer {
+      position: relative; z-index: 1;
+      text-align: center; padding: 32px 24px;
+      border-top: 1px solid var(--border2);
+      font-family: 'Pirata One', cursive;
+      font-size: 16px; color: var(--gold3);
+      letter-spacing: 0.05em;
+    }
+    .footer-sub { font-family: 'Libre Baskerville', serif; font-size: 11px; color: var(--muted); margin-top: 6px; letter-spacing: 0.02em; }
+    .footer-back {
+      display: inline-block; margin-top: 12px;
+      font-family: 'Cinzel', serif; font-size: 11px;
+      color: var(--gold3); text-decoration: none;
+      border: 1px solid var(--border2); padding: 6px 16px; border-radius: 3px;
+      transition: all 0.2s;
+    }
+    .footer-back:hover { border-color: var(--gold); color: var(--gold); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes pulse { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:0.5; transform:scale(0.8); } }
+
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.6s, transform 0.6s; }
+    .reveal.visible { opacity: 1; transform: none; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .devil-fruits { grid-template-columns: 1fr 1fr; }
+      .about-grid { grid-template-columns: 1fr; }
+      .treasure-grid { grid-template-columns: 1fr; }
+      .medals-grid { grid-template-columns: 1fr; }
+      .edu-scrolls { grid-template-columns: 1fr; }
+      .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .hero-inner { gap: 40px; }
+      .nav-links { display: none; }
+    }
+    @media (max-width: 600px) {
+      .devil-fruits { grid-template-columns: 1fr; }
+      .wanted-poster { width: 280px; }
+      .hero-stats { grid-template-columns: repeat(2, 1fr); }
+      .hero-heading { font-size: 28px; }
+      .sec-title { font-size: 22px; }
+    }
+  </style>
 </head>
 <body>
-  <div class="glow-orb glow-orb-1"></div>
-  <div class="glow-orb glow-orb-2"></div>
 
+  <!-- NAV -->
   <nav>
-    <div class="nav-logo">SN<span>://</span>data_engineer</div>
-    <ul class="nav-links">
-      <li><a href="#about">About</a></li>
-      <li><a href="#skills">Skills</a></li>
-      <li><a href="#experience">Experience</a></li>
-      <li><a href="#projects">Projects</a></li>
-      <li><a href="#certifications">Certs</a></li>
-      <li><a href="#contact">Contact</a></li>
-    </ul>
-    <a href="mailto:naushada264@gmail.com" class="nav-cta">Hire Me</a>
+    <div class="nav-brand">☠ <em>The</em> Data Pirate</div>
+    <div class="nav-links">
+      <a href="#about">Captain's Log</a>
+      <a href="#skills">Devil Fruits</a>
+      <a href="#experience">Grand Line</a>
+      <a href="#projects">Treasure</a>
+      <a href="#certifications">Medals</a>
+      <a href="#contact">Den Den Mushi</a>
+    </div>
+    <a href="mailto:naushada264@gmail.com" class="nav-cta">Join My Crew</a>
   </nav>
 
-  <section class="hero">
-    <div class="hero-content">
-      <div class="hero-tag"><div class="hero-tag-dot"></div>Available for new opportunities</div>
-      <h1 class="hero-name"><span class="first">Shaikh</span><br><span class="last">Naushad</span></h1>
-      <p class="hero-role"><span class="highlight">Azure Data Engineer</span> &nbsp;/&nbsp; 7+ Years Experience</p>
-      <p class="hero-desc">Building scalable data pipelines and analytics platforms across insurance, pharmaceutical, and staffing domains. Specializing in Azure Databricks, ADF, PySpark, and Power BI.</p>
-      <div class="hero-actions">
-        <a href="#experience" class="btn-primary">View My Work</a>
-        <a href="https://github.com/naushada264" target="_blank" class="btn-ghost">GitHub &rarr;</a>
+  <!-- ── HERO ── -->
+  <div class="hero-section">
+    <div class="hero-ocean"></div>
+    <div class="hero-ocean-waves"></div>
+
+    <!-- Compass rose -->
+    <div class="compass">
+      <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="50" cy="50" r="48" stroke="#f0c040" stroke-width="1" stroke-opacity="0.6"/>
+        <circle cx="50" cy="50" r="38" stroke="#f0c040" stroke-width="0.5" stroke-opacity="0.3"/>
+        <line x1="50" y1="2" x2="50" y2="98" stroke="#f0c040" stroke-width="0.5" stroke-opacity="0.4"/>
+        <line x1="2" y1="50" x2="98" y2="50" stroke="#f0c040" stroke-width="0.5" stroke-opacity="0.4"/>
+        <line x1="15" y1="15" x2="85" y2="85" stroke="#f0c040" stroke-width="0.3" stroke-opacity="0.3"/>
+        <line x1="85" y1="15" x2="15" y2="85" stroke="#f0c040" stroke-width="0.3" stroke-opacity="0.3"/>
+        <polygon points="50,4 54,50 50,42 46,50" fill="#f0c040" opacity="0.8"/>
+        <polygon points="50,96 54,50 50,58 46,50" fill="#f0c040" opacity="0.5"/>
+        <polygon points="4,50 50,54 42,50 50,46" fill="#f0c040" opacity="0.5"/>
+        <polygon points="96,50 50,54 58,50 50,46" fill="#f0c040" opacity="0.5"/>
+        <text x="50" y="14" text-anchor="middle" font-size="8" fill="#f0c040" font-family="serif" opacity="0.8">N</text>
+        <text x="50" y="92" text-anchor="middle" font-size="8" fill="#f0c040" font-family="serif" opacity="0.8">S</text>
+        <text x="10" y="53" text-anchor="middle" font-size="8" fill="#f0c040" font-family="serif" opacity="0.8">W</text>
+        <text x="91" y="53" text-anchor="middle" font-size="8" fill="#f0c040" font-family="serif" opacity="0.8">E</text>
+        <circle cx="50" cy="50" r="4" fill="#f0c040" opacity="0.6"/>
+      </svg>
+    </div>
+
+    <div class="hero-inner">
+      <!-- Wanted Poster -->
+      <div class="wanted-poster">
+        <div class="poster-marine">☆ Marine Headquarters ☆</div>
+        <div class="poster-wanted">WANTED</div>
+        <div class="poster-doa">DEAD OR ALIVE</div>
+        <div class="poster-photo">🗡️</div>
+        <div class="poster-name">Shaikh Naushad</div>
+        <div class="poster-alias">"The Data Pipeline King"</div>
+        <hr class="poster-divider"/>
+        <div class="poster-bounty-label">BOUNTY</div>
+        <div class="poster-bounty">฿7,000,000,000</div>
+        <div class="poster-currency">BERRIES</div>
+        <hr class="poster-divider"/>
+        <div style="font-size:10px; color:#6a4a1a; font-family:'Special Elite',cursive; margin-top:8px;">Azure Data Engineer · 7+ Years</div>
+      </div>
+
+      <!-- Text -->
+      <div class="hero-text">
+        <div class="hero-badge"><div class="hero-badge-dot"></div>Available for new nakama</div>
+        <h1 class="hero-heading">
+          The <span class="red">Data</span><br>
+          Pirate King<br>
+          Sets Sail
+        </h1>
+        <div class="hero-subtitle">⚓ Azure Data Engineer · 7+ Years on the Grand Line</div>
+        <p class="hero-desc">
+          Like the Going Merry braving the Grand Line, I navigate the seas of raw data — designing unsinkable pipelines, taming Spark clusters like devil fruit powers, and charting courses through insurance, pharma, and staffing domains.
+        </p>
+        <div class="hero-stats">
+          <div class="hero-stat"><div class="hero-stat-num">7+</div><div class="hero-stat-label">Years at Sea</div></div>
+          <div class="hero-stat"><div class="hero-stat-num">3</div><div class="hero-stat-label">Islands Conquered</div></div>
+          <div class="hero-stat"><div class="hero-stat-num">99%</div><div class="hero-stat-label">Accuracy</div></div>
+          <div class="hero-stat"><div class="hero-stat-num">3</div><div class="hero-stat-label">Medals Won</div></div>
+        </div>
+        <div class="hero-btns">
+          <a href="#experience" class="btn-gold">Chart the Course</a>
+          <a href="https://github.com/naushad264" target="_blank" class="btn-scroll">GitHub Logbook →</a>
+        </div>
       </div>
     </div>
-    <div class="hero-pipeline">
-      <div class="pipe-node active">ADLS<br>Gen2</div>
-      <div class="pipe-line"></div>
-      <div class="pipe-node active">ADF</div>
-      <div class="pipe-line"></div>
-      <div class="pipe-node active">Spark</div>
-      <div class="pipe-line"></div>
-      <div class="pipe-node active">Delta<br>Lake</div>
-      <div class="pipe-line"></div>
-      <div class="pipe-node">Power<br>BI</div>
-      <div class="pipe-label">PIPELINE FLOW</div>
-    </div>
-    <div class="hero-stats">
-      <div class="hero-stat"><div class="hero-stat-num">7+</div><div class="hero-stat-label">Years Experience</div></div>
-      <div class="hero-stat"><div class="hero-stat-num">3</div><div class="hero-stat-label">Domains Served</div></div>
-      <div class="hero-stat"><div class="hero-stat-num">99%</div><div class="hero-stat-label">Data Accuracy</div></div>
-      <div class="hero-stat"><div class="hero-stat-num">3</div><div class="hero-stat-label">MS Certifications</div></div>
-    </div>
-  </section>
+  </div>
 
+  <!-- ── WAVE DIVIDER ── -->
+  <div class="wave-divider">
+    <svg viewBox="0 0 1200 60" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M0,30 C200,60 400,0 600,30 C800,60 1000,0 1200,30 L1200,60 L0,60 Z" fill="rgba(13,31,56,0.4)"/>
+    </svg>
+  </div>
+
+  <!-- ── CAPTAIN'S LOG (ABOUT) ── -->
   <section id="about">
-    <div class="section-header reveal"><div class="section-tag">01 / About</div><div class="section-line"></div></div>
-    <div class="about-grid">
-      <div class="about-text reveal">
-        <p>Hi, I'm <strong>Naushad</strong> — a results-driven Data Engineer with 7+ years of experience designing, building, and optimizing scalable data pipelines and analytics solutions across <strong>insurance, pharmaceutical, and staffing</strong> domains.</p>
-        <p>I specialize in the Azure ecosystem — Databricks, ADF, ADLS Gen2, Delta Lake — and I love solving hard data problems: reducing pipeline costs, tuning Spark jobs for maximum efficiency, and turning raw multi-source data into clean, reliable analytical models.</p>
-        <p>Coding opened a new world of problem-solving for me, and I've been self-driven in expanding my skills ever since.</p>
-        <div class="about-quote"><p>"Declare variables, not war."</p></div>
+    <div class="sec-header reveal">
+      <div class="sec-num">— I —</div>
+      <div class="sec-title">Captain's Log</div>
+      <div class="sec-line"></div>
+      <div class="sec-ornament">⚓</div>
+    </div>
+    <div class="about-grid reveal">
+      <div class="about-text">
+        <p>Ahoy! I'm <strong>Naushad</strong> — a results-driven Data Engineer with 7+ years sailing the treacherous seas of data pipelines across <strong>insurance, pharmaceutical, and staffing</strong> domains.</p>
+        <p>My devil fruit ability? Mastering the <strong>Azure ecosystem</strong> — Databricks, ADF, ADLS Gen2, Delta Lake. I devour hard data problems like Luffy devours meat: reducing pipeline costs, tuning Spark jobs for maximum speed, and turning chaotic multi-source data into clean, reliable analytical gold.</p>
+        <p>Every great pirate king needs a dream. Mine is to build the world's most efficient data pipeline — one that never sinks, never slows, and always delivers.</p>
+        <div class="quote-block">"Declare variables, not war."</div>
       </div>
-      <div class="about-info reveal">
-        <div class="info-card"><div class="info-card-icon">&#128205;</div><div class="info-card-text"><h4>Location</h4><p>Noida / Gurugram, India</p></div></div>
-        <div class="info-card"><div class="info-card-icon">&#127970;</div><div class="info-card-text"><h4>Current Role</h4><p>Data Engineer @ Hexaware Technologies</p></div></div>
-        <div class="info-card"><div class="info-card-icon">&#9729;</div><div class="info-card-text"><h4>Cloud Platform</h4><p>Microsoft Azure (Databricks, ADF, ADLS Gen2)</p></div></div>
-        <div class="info-card"><div class="info-card-icon">&#127891;</div><div class="info-card-text"><h4>Education</h4><p>B.Tech &mdash; Lovely Professional University, 2016</p></div></div>
-        <div class="info-card"><div class="info-card-icon">&#128260;</div><div class="info-card-text"><h4>Methodology</h4><p>Agile &amp; Waterfall / JIRA / Confluence</p></div></div>
+      <div class="info-cards">
+        <div class="info-card"><div class="info-icon">📍</div><div><h4>Home Port</h4><p>Noida / Gurugram, India</p></div></div>
+        <div class="info-card"><div class="info-icon">🏢</div><div><h4>Current Ship</h4><p>Data Engineer @ Hexaware Technologies</p></div></div>
+        <div class="info-card"><div class="info-icon">☁</div><div><h4>Navigation System</h4><p>Microsoft Azure (Databricks, ADF, ADLS Gen2)</p></div></div>
+        <div class="info-card"><div class="info-icon">🎓</div><div><h4>Academy</h4><p>B.Tech — Lovely Professional University, 2016</p></div></div>
+        <div class="info-card"><div class="info-icon">🔄</div><div><h4>Crew Methods</h4><p>Agile & Waterfall / JIRA / Confluence</p></div></div>
       </div>
     </div>
   </section>
 
+  <!-- ── DEVIL FRUITS (SKILLS) ── -->
   <section id="skills">
-    <div class="section-header reveal"><div class="section-tag">02 / Skills</div><div class="section-line"></div></div>
-    <div class="skills-layout">
-      <div class="reveal">
-        <div class="skills-group">
-          <h3>Core Proficiency</h3>
-          <div class="skill-bar-wrap"><div class="skill-bar-top"><span class="skill-name">Azure Databricks / PySpark</span><span class="skill-pct">90%</span></div><div class="skill-track"><div class="skill-fill" data-width="90"></div></div></div>
-          <div class="skill-bar-wrap"><div class="skill-bar-top"><span class="skill-name">Azure Data Factory (ADF)</span><span class="skill-pct">88%</span></div><div class="skill-track"><div class="skill-fill" data-width="88"></div></div></div>
-          <div class="skill-bar-wrap"><div class="skill-bar-top"><span class="skill-name">Python (Pandas, NumPy)</span><span class="skill-pct">85%</span></div><div class="skill-track"><div class="skill-fill" data-width="85"></div></div></div>
-          <div class="skill-bar-wrap"><div class="skill-bar-top"><span class="skill-name">T-SQL / MS SQL Server</span><span class="skill-pct">80%</span></div><div class="skill-track"><div class="skill-fill" data-width="80"></div></div></div>
-          <div class="skill-bar-wrap"><div class="skill-bar-top"><span class="skill-name">Power BI (DAX, M-Query)</span><span class="skill-pct">82%</span></div><div class="skill-track"><div class="skill-fill" data-width="82"></div></div></div>
-          <div class="skill-bar-wrap"><div class="skill-bar-top"><span class="skill-name">Delta Lake / Delta Tables</span><span class="skill-pct">85%</span></div><div class="skill-track"><div class="skill-fill" data-width="85"></div></div></div>
-        </div>
+    <div class="sec-header reveal">
+      <div class="sec-num">— II —</div>
+      <div class="sec-title">Devil Fruit Abilities</div>
+      <div class="sec-line"></div>
+      <div class="sec-ornament">🍎</div>
+    </div>
+    <div class="devil-fruits">
+      <div class="devil-fruit reveal">
+        <div class="fruit-icon">⚡</div>
+        <div class="fruit-name">Spark-Spark Fruit</div>
+        <div class="fruit-desc">Azure Databricks & PySpark mastery — partition, cache, broadcast joins at will. No cluster can resist.</div>
+        <div class="fruit-bar"><div class="fruit-fill" data-width="90"></div></div>
+        <div style="font-size:10px;color:var(--gold3);margin-top:6px;font-family:'Special Elite',cursive;">Power Level: 90%</div>
       </div>
-      <div class="reveal">
-        <div class="skills-group">
-          <h3>Tools &amp; Platforms</h3>
-          <div class="skill-bar-wrap"><div class="skill-bar-top"><span class="skill-name">CI/CD — Azure DevOps / Harness</span><span class="skill-pct">78%</span></div><div class="skill-track"><div class="skill-fill" data-width="78"></div></div></div>
-          <div class="skill-bar-wrap"><div class="skill-bar-top"><span class="skill-name">Microsoft Fabric</span><span class="skill-pct">72%</span></div><div class="skill-track"><div class="skill-fill" data-width="72"></div></div></div>
-          <div class="skill-bar-wrap"><div class="skill-bar-top"><span class="skill-name">ADLS Gen2 / Data Warehousing</span><span class="skill-pct">87%</span></div><div class="skill-track"><div class="skill-fill" data-width="87"></div></div></div>
-          <div class="skill-bar-wrap"><div class="skill-bar-top"><span class="skill-name">Advanced Excel</span><span class="skill-pct">80%</span></div><div class="skill-track"><div class="skill-fill" data-width="80"></div></div></div>
-          <div class="skill-bar-wrap"><div class="skill-bar-top"><span class="skill-name">GitHub / Version Control</span><span class="skill-pct">82%</span></div><div class="skill-track"><div class="skill-fill" data-width="82"></div></div></div>
-        </div>
-        <div class="tag-cloud">
-          <span class="tag accent">Azure Databricks</span><span class="tag accent">ADF</span><span class="tag accent">PySpark</span><span class="tag accent">Delta Lake</span>
-          <span class="tag">ADLS Gen2</span><span class="tag">Power BI</span><span class="tag">Python</span><span class="tag">SQL</span>
-          <span class="tag">M.Fabric</span><span class="tag">DevOps</span><span class="tag">JIRA</span><span class="tag">Agile</span>
-          <span class="tag">DAX</span><span class="tag">Harness</span><span class="tag">NumPy</span><span class="tag">Pandas</span>
-        </div>
+      <div class="devil-fruit reveal">
+        <div class="fruit-icon">🔗</div>
+        <div class="fruit-name">Pipeline-Pipeline Fruit</div>
+        <div class="fruit-desc">Azure Data Factory — orchestrate complex workflows, automate ingestion, minimize activity costs.</div>
+        <div class="fruit-bar"><div class="fruit-fill" data-width="88"></div></div>
+        <div style="font-size:10px;color:var(--gold3);margin-top:6px;font-family:'Special Elite',cursive;">Power Level: 88%</div>
+      </div>
+      <div class="devil-fruit reveal">
+        <div class="fruit-icon">🐍</div>
+        <div class="fruit-name">Python-Python Fruit</div>
+        <div class="fruit-desc">Pandas, NumPy, and beyond — slithering through data transformations with reptilian precision.</div>
+        <div class="fruit-bar"><div class="fruit-fill" data-width="85"></div></div>
+        <div style="font-size:10px;color:var(--gold3);margin-top:6px;font-family:'Special Elite',cursive;">Power Level: 85%</div>
+      </div>
+      <div class="devil-fruit reveal">
+        <div class="fruit-icon">🗃️</div>
+        <div class="fruit-name">Delta-Delta Fruit</div>
+        <div class="fruit-desc">Delta Lake mastery — ACID transactions, time travel, and schema enforcement across the data swamp.</div>
+        <div class="fruit-bar"><div class="fruit-fill" data-width="85"></div></div>
+        <div style="font-size:10px;color:var(--gold3);margin-top:6px;font-family:'Special Elite',cursive;">Power Level: 85%</div>
+      </div>
+      <div class="devil-fruit reveal">
+        <div class="fruit-icon">📊</div>
+        <div class="fruit-name">BI-BI Fruit</div>
+        <div class="fruit-desc">Power BI, DAX, M-Query — turning raw numbers into visual wisdom that even marines can understand.</div>
+        <div class="fruit-bar"><div class="fruit-fill" data-width="82"></div></div>
+        <div style="font-size:10px;color:var(--gold3);margin-top:6px;font-family:'Special Elite',cursive;">Power Level: 82%</div>
+      </div>
+      <div class="devil-fruit reveal">
+        <div class="fruit-icon">🏗️</div>
+        <div class="fruit-name">DevOps-DevOps Fruit</div>
+        <div class="fruit-desc">CI/CD pipelines across DEV, PPD, PROD — automated deployments via Azure DevOps, Harness, GitHub.</div>
+        <div class="fruit-bar"><div class="fruit-fill" data-width="78"></div></div>
+        <div style="font-size:10px;color:var(--gold3);margin-top:6px;font-family:'Special Elite',cursive;">Power Level: 78%</div>
+      </div>
+    </div>
+
+    <div class="tech-scroll reveal">
+      <div class="tech-scroll-title">⚓ Full Arsenal</div>
+      <div class="tech-tags">
+        <span class="tech-tag strong">Azure Databricks</span>
+        <span class="tech-tag strong">ADF</span>
+        <span class="tech-tag strong">PySpark</span>
+        <span class="tech-tag strong">Delta Lake</span>
+        <span class="tech-tag strong">ADLS Gen2</span>
+        <span class="tech-tag strong">Power BI</span>
+        <span class="tech-tag">Python</span>
+        <span class="tech-tag">T-SQL</span>
+        <span class="tech-tag">MS SQL Server</span>
+        <span class="tech-tag">M.Fabric</span>
+        <span class="tech-tag">Azure DevOps</span>
+        <span class="tech-tag">Harness</span>
+        <span class="tech-tag">GitHub</span>
+        <span class="tech-tag">DAX</span>
+        <span class="tech-tag">M-Query</span>
+        <span class="tech-tag">JIRA</span>
+        <span class="tech-tag">Confluence</span>
+        <span class="tech-tag">NumPy</span>
+        <span class="tech-tag">Pandas</span>
+        <span class="tech-tag">Agile</span>
+        <span class="tech-tag">Waterfall</span>
       </div>
     </div>
   </section>
 
+  <!-- ── GRAND LINE (EXPERIENCE) ── -->
   <section id="experience">
-    <div class="section-header reveal"><div class="section-tag">03 / Experience</div><div class="section-line"></div></div>
-    <div class="timeline">
-      <div class="timeline-item current reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-meta"><span class="timeline-period">Jun 2024 &ndash; Present</span><span class="timeline-domain">Insurance</span></div>
-          <div class="timeline-role">Data Engineer</div>
-          <div class="timeline-company">Hexaware Technologies, Noida &nbsp;|&nbsp; <span>Client: AXA XL</span></div>
-          <ul class="timeline-points">
-            <li>Designing and developing scalable data pipelines in Azure Databricks, processing large volumes of structured data into AXA's Data Model for advanced analytics with efficient job scheduling and resource allocation.</li>
-            <li>Applying advanced Spark optimization — partitioning, caching, broadcast joins — to significantly reduce Databricks cluster costs and improve large-scale transformation performance.</li>
-            <li>Orchestrating complex data workflows in ADF, automating ingestion from diverse sources into SQL Data Warehouses while reducing pipeline runtime and ADF activity costs.</li>
-            <li>Refactoring transformations into modular, reusable ADF components, reducing maintenance overhead and eliminating redundant computations.</li>
-            <li>Building and maintaining DevOps CI/CD pipelines (Azure DevOps / Harness / GitHub) for consistent automated deployment across DEV, PPD, and PROD environments.</li>
+    <div class="sec-header reveal">
+      <div class="sec-num">— III —</div>
+      <div class="sec-title">Voyages on the Grand Line</div>
+      <div class="sec-line"></div>
+      <div class="sec-ornament">🌊</div>
+    </div>
+    <div class="grand-line">
+
+      <div class="voyage-stop reveal">
+        <div class="voyage-dot current"></div>
+        <div class="voyage-card current-card">
+          <div class="voyage-meta">
+            <span class="voyage-period">Jun 2024 – Present</span>
+            <span class="voyage-domain">Insurance</span>
+            <span class="voyage-badge">⚓ Current Port</span>
+          </div>
+          <div class="voyage-role">Data Engineer</div>
+          <div class="voyage-company">Hexaware Technologies, Noida · Client: AXA XL</div>
+          <ul class="voyage-points">
+            <li>Designing scalable Azure Databricks pipelines — large volumes of structured data into AXA's Data Model with efficient job scheduling and resource allocation to control compute costs.</li>
+            <li>Spark optimization spells: partitioning, caching, broadcast joins — cutting cluster costs while improving large-scale transformation performance.</li>
+            <li>ADF orchestration mastery — automating ingestion, selecting optimal integration runtimes, binary formats for large datasets, slashing pipeline activity costs.</li>
+            <li>Refactoring into modular, reusable ADF components — reduced maintenance and eliminated redundant computations.</li>
+            <li>CI/CD via Azure DevOps / Harness / GitHub — consistent automated deployment across DEV, PPD, and PROD.</li>
           </ul>
         </div>
       </div>
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-meta"><span class="timeline-period">Jul 2021 &ndash; Jun 2024</span><span class="timeline-domain">Pharmaceutical</span></div>
-          <div class="timeline-role">Lead Associate &ndash; Analytics</div>
-          <div class="timeline-company">WNS Global Services, Gurugram &nbsp;|&nbsp; <span>Client: Haleon (formerly GSK)</span></div>
-          <ul class="timeline-points">
-            <li>Led a Data Harmonization project consolidating data from Nielsen, IQVIA, DLIMI, CIRCANA and more into a unified global structure enabling standardized reporting.</li>
-            <li>Designed end-to-end ADF pipelines with parallelism and concurrency optimization, cutting pipeline execution time and data movement cost.</li>
-            <li>Performed complex PySpark transformations in Azure Databricks with cluster auto-scaling and auto-termination for compute cost efficiency.</li>
-            <li>Achieved &gt;99% data accuracy through rigorous validation checks comparing transformed output against raw source data.</li>
-            <li>Created an end-to-end ETL pipeline using Microsoft Fabric for Needle Dashboard Optimization, from fetch to semantic model load.</li>
+
+      <div class="voyage-stop reveal">
+        <div class="voyage-dot"></div>
+        <div class="voyage-card">
+          <div class="voyage-meta">
+            <span class="voyage-period">Jul 2021 – Jun 2024</span>
+            <span class="voyage-domain">Pharmaceutical</span>
+          </div>
+          <div class="voyage-role">Lead Associate – Analytics</div>
+          <div class="voyage-company">WNS Global Services, Gurugram · Client: Haleon (formerly GSK)</div>
+          <ul class="voyage-points">
+            <li>Led Data Harmonization Project — consolidated Nielsen, IQVIA, DLIMI, CIRCANA and more into a unified global structure enabling standardized reporting.</li>
+            <li>End-to-end ADF pipelines with parallelism and concurrency, cutting execution time and data movement cost across the seas.</li>
+            <li>PySpark transformations in Databricks with cluster auto-scaling and auto-termination — a perfectly calibrated ship's engine.</li>
+            <li>Achieved &gt;99% data accuracy through rigorous validation — comparing transformed output against raw source data.</li>
+            <li>Built end-to-end ETL in Microsoft Fabric for Needle Dashboard Optimization, from data fetch to semantic model load.</li>
           </ul>
         </div>
       </div>
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-meta"><span class="timeline-period">Jun 2020 &ndash; Jul 2021</span><span class="timeline-domain">Staffing</span></div>
-          <div class="timeline-role">Reporting Analyst</div>
-          <div class="timeline-company">TrueBlue Inc., Gurugram</div>
-          <ul class="timeline-points">
-            <li>Built data integration solutions using SharePoint and MS SQL Server ensuring seamless data flow for business stakeholders.</li>
-            <li>Designed ETL processes using Python, Power Automate and SQL to load data from various sources into SQL databases for Power BI reporting.</li>
-            <li>Created and optimized complex SQL queries for ad-hoc analysis, providing actionable insights to support decision-making.</li>
+
+      <div class="voyage-stop reveal">
+        <div class="voyage-dot"></div>
+        <div class="voyage-card">
+          <div class="voyage-meta">
+            <span class="voyage-period">Jun 2020 – Jul 2021</span>
+            <span class="voyage-domain">Staffing</span>
+          </div>
+          <div class="voyage-role">Reporting Analyst</div>
+          <div class="voyage-company">TrueBlue Inc., Gurugram</div>
+          <ul class="voyage-points">
+            <li>Data integration using SharePoint and MS SQL Server — ensuring seamless data flow for business stakeholders.</li>
+            <li>ETL using Python, Power Automate and SQL — loading multi-source data into SQL databases for Power BI reporting.</li>
+            <li>Optimized SQL queries for ad-hoc analysis, delivering actionable insights to support decision-making.</li>
           </ul>
         </div>
       </div>
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-meta"><span class="timeline-period">Aug 2019 &ndash; May 2020</span><span class="timeline-domain">Technology</span></div>
-          <div class="timeline-role">Quality Analyst</div>
-          <div class="timeline-company">GlobalLogic Technologies, Gurugram &nbsp;|&nbsp; <span>Client: Google</span></div>
-          <ul class="timeline-points">
-            <li>Designed end-to-end Power BI solutions including data extraction, transformation and report creation for timely stakeholder insights.</li>
-            <li>Collaborated with data engineers to ensure data accuracy and consistency for Power BI dashboards using ETL and validation techniques.</li>
+
+      <div class="voyage-stop reveal">
+        <div class="voyage-dot"></div>
+        <div class="voyage-card">
+          <div class="voyage-meta">
+            <span class="voyage-period">Aug 2019 – May 2020</span>
+            <span class="voyage-domain">Technology</span>
+          </div>
+          <div class="voyage-role">Quality Analyst</div>
+          <div class="voyage-company">GlobalLogic Technologies, Gurugram · Client: Google</div>
+          <ul class="voyage-points">
+            <li>End-to-end Power BI solutions — data extraction, transformation, loading, and report creation for stakeholder insights.</li>
+            <li>Collaborated with data engineers to ensure accuracy and consistency in dashboards using ETL and validation techniques.</li>
           </ul>
         </div>
       </div>
-      <div class="timeline-item reveal">
-        <div class="timeline-dot"></div>
-        <div class="timeline-card">
-          <div class="timeline-meta"><span class="timeline-period">Jan 2017 &ndash; Sep 2018</span><span class="timeline-domain">Technology</span></div>
-          <div class="timeline-role">Associate Analyst</div>
-          <div class="timeline-company">GlobalLogic Technologies, Gurugram &nbsp;|&nbsp; <span>Client: Google</span></div>
-          <ul class="timeline-points">
-            <li>Built dynamic Power BI reports and dashboards delivering requested KPIs and key business insights to clients.</li>
-            <li>Conducted data analysis using Advanced Excel to identify trends, patterns and outliers for actionable business recommendations.</li>
+
+      <div class="voyage-stop reveal">
+        <div class="voyage-dot"></div>
+        <div class="voyage-card">
+          <div class="voyage-meta">
+            <span class="voyage-period">Jan 2017 – Sep 2018</span>
+            <span class="voyage-domain">Technology</span>
+          </div>
+          <div class="voyage-role">Associate Analyst</div>
+          <div class="voyage-company">GlobalLogic Technologies, Gurugram · Client: Google</div>
+          <ul class="voyage-points">
+            <li>Dynamic Power BI reports and dashboards — delivering KPIs and key business insights to Google clients.</li>
+            <li>Advanced Excel data analysis — identifying trends, patterns and outliers for actionable recommendations.</li>
           </ul>
         </div>
       </div>
+
     </div>
   </section>
 
+  <!-- ── TREASURE (PROJECTS) ── -->
   <section id="projects">
-    <div class="section-header reveal"><div class="section-tag">04 / Projects</div><div class="section-line"></div></div>
-    <div class="projects-grid">
-      <div class="project-card reveal">
-        <div class="project-num">PROJECT_01</div>
-        <div class="project-title">Chat Analysis</div>
-        <div class="project-desc">Appends and merges datasets from Facebook, WhatsApp and Telegram into a unified dataframe, fully prepped for visualization in Power BI with cross-platform insights.</div>
-        <div class="project-tech"><span>Python</span><span>Jupyter Notebook</span><span>Power BI</span><span>Pandas</span></div>
-        <a href="https://github.com/naushada264/Projects" target="_blank" class="project-link">View on GitHub &rarr;</a>
-      </div>
-      <div class="project-card reveal">
-        <div class="project-num">PROJECT_02</div>
-        <div class="project-title">Sudoku Solver</div>
-        <div class="project-desc">A Python algorithm capable of solving Sudoku puzzles of sizes 4x4, 6x6, 9x9, 12x12, 16x16, 20x20 and 25x25 using backtracking and constraint propagation.</div>
-        <div class="project-tech"><span>Python</span><span>Algorithms</span><span>Backtracking</span></div>
-        <a href="https://github.com/naushada264/Projects" target="_blank" class="project-link">View on GitHub &rarr;</a>
-      </div>
+    <div class="sec-header reveal">
+      <div class="sec-num">— IV —</div>
+      <div class="sec-title">Buried Treasure</div>
+      <div class="sec-line"></div>
+      <div class="sec-ornament">💎</div>
     </div>
-    <div class="powerbi-wrap reveal">
-      <div class="powerbi-header">
-        <div class="powerbi-header-left"><div class="powerbi-dot"></div><div><div class="powerbi-label">Live Dashboard &middot; Power BI Embed</div><div class="powerbi-title">Northwind Sales Dashboard</div></div></div>
-        <span class="powerbi-badge">Interactive &middot; Live Data</span>
-      </div>
-      <div class="powerbi-frame-wrap">
-        <iframe src="https://app.powerbi.com/view?r=eyJrIjoiOTk0ODliZDAtZjI4ZC00MWQ4LTk5NDMtNGQzOTIyZDhjOGFmIiwidCI6IjljMDliYTBlLTE1YjQtNDVhNS04MGNkLTZiZGNiMTNlNzEyMCJ9" allowfullscreen title="Northwind Power BI Dashboard"></iframe>
-      </div>
-      <div class="powerbi-footer">
-        <p>Built with Power Query &middot; DAX &middot; Power BI</p>
-        <a href="https://app.powerbi.com/view?r=eyJrIjoiOTk0ODliZDAtZjI4ZC00MWQ4LTk5NDMtNGQzOTIyZDhjOGFmIiwidCI6IjljMDliYTBlLTE1YjQtNDVhNS04MGNkLTZiZGNiMTNlNzEyMCJ9" target="_blank" class="powerbi-fullscreen">Open full screen &nearr;</a>
-      </div>
-    </div>
-  </section>
 
-  <section id="certifications">
-    <div class="section-header reveal"><div class="section-tag">05 / Certifications</div><div class="section-line"></div></div>
-    <div class="certs-grid">
-      <div class="cert-card reveal"><div class="cert-badge">&#9729;</div><div class="cert-info"><h4>Azure Data Fundamentals</h4><p>Exam DP-900</p><p class="cert-issuer">Microsoft</p></div></div>
-      <div class="cert-card reveal"><div class="cert-badge">&#128202;</div><div class="cert-info"><h4>Power BI Data Analyst</h4><p>Exam PL-300</p><p class="cert-issuer">Microsoft</p></div></div>
-      <div class="cert-card reveal"><div class="cert-badge">&#127891;</div><div class="cert-info"><h4>Advanced Power BI</h4><p>Professional Certificate</p><p class="cert-issuer">LinkedIn Learning</p></div></div>
+    <div class="treasure-grid">
+      <div class="treasure-card reveal">
+        <div class="treasure-num">01</div>
+        <div class="treasure-icon">💬</div>
+        <div class="treasure-title">Chat Analysis</div>
+        <div class="treasure-desc">Unifies datasets from Facebook, WhatsApp and Telegram into a single dataframe — the One Piece of cross-platform messaging data, ready to be visualized in Power BI.</div>
+        <div class="treasure-tech"><span>Python</span><span>Jupyter Notebook</span><span>Power BI</span><span>Pandas</span></div>
+        <a href="https://github.com/naushada264/Projects" target="_blank" class="treasure-link">View on GitHub →</a>
+      </div>
+      <div class="treasure-card reveal">
+        <div class="treasure-num">02</div>
+        <div class="treasure-icon">🧩</div>
+        <div class="treasure-title">Sudoku Solver</div>
+        <div class="treasure-desc">Like Zoro cutting through any obstacle, this algorithm solves Sudoku grids from 4×4 up to 25×25 using backtracking and constraint propagation. No puzzle escapes.</div>
+        <div class="treasure-tech"><span>Python</span><span>Algorithms</span><span>Backtracking</span></div>
+        <a href="https://github.com/naushada264/Projects" target="_blank" class="treasure-link">View on GitHub →</a>
+      </div>
     </div>
-  </section>
 
-  <section id="education">
-    <div class="section-header reveal"><div class="section-tag">06 / Education</div><div class="section-line"></div></div>
-    <div class="edu-grid">
-      <div class="edu-card reveal"><div class="edu-type">Undergraduate</div><div class="edu-degree">Bachelor of Technology</div><div class="edu-school">Lovely Professional University, Jalandhar</div><div class="edu-meta"><span class="edu-badge">2016</span><span class="edu-badge">8.47 CGPA</span></div></div>
-      <div class="edu-card reveal"><div class="edu-type">Senior Secondary (HSC)</div><div class="edu-degree">Class XII</div><div class="edu-school">St. Xavier's Public School, Gorakhpur</div><div class="edu-meta"><span class="edu-badge">2011</span><span class="edu-badge">80%</span></div></div>
-      <div class="edu-card reveal"><div class="edu-type">Secondary (SSC)</div><div class="edu-degree">Class X</div><div class="edu-school">St. Xavier's Public School, Gorakhpur</div><div class="edu-meta"><span class="edu-badge">2009</span><span class="edu-badge">87%</span></div></div>
-    </div>
-  </section>
-
-  <section id="contact">
-    <div class="section-header reveal"><div class="section-tag">07 / Contact</div><div class="section-line"></div></div>
-    <div class="contact-inner">
-      <div class="reveal">
-        <div class="contact-text">
-          <h3>Let's build something<br>great together.</h3>
-          <p>Open to data engineering roles, freelance projects and collaborations. Whether you have a pipeline to build, data to harmonize or insights to unlock &mdash; let's talk.</p>
+    <div class="powerbi-treasure reveal">
+      <div class="powerbi-header-op">
+        <div class="powerbi-dot-op"></div>
+        <div>
+          <div class="powerbi-label-op">Live Dashboard · Power BI Embed</div>
+          <div class="powerbi-title-op">Northwind Sales Dashboard</div>
         </div>
-        <div class="contact-domains">
-          <h4>Domain Experience</h4>
-          <div class="domain-tags"><span class="domain-tag">Insurance</span><span class="domain-tag">Pharmaceutical</span><span class="domain-tag">Staffing</span><span class="domain-tag">Technology</span></div>
+      </div>
+      <div class="powerbi-iframe-wrap">
+        <iframe src="https://app.powerbi.com/view?r=eyJrIjoiOTk0ODliZDAtZjI4ZC00MWQ4LTk5NDMtNGQzOTIyZDhjOGFmIiwidCI6IjljMDliYTBlLTE1YjQtNDVhNS04MGNkLTZiZGNiMTNlNzEyMCJ9" allowfullscreen title="Northwind Dashboard"></iframe>
+      </div>
+      <div class="powerbi-footer-op">
+        <span>Built with Power Query · DAX · Power BI</span>
+        <a href="https://app.powerbi.com/view?r=eyJrIjoiOTk0ODliZDAtZjI4ZC00MWQ4LTk5NDMtNGQzOTIyZDhjOGFmIiwidCI6IjljMDliYTBlLTE1YjQtNDVhNS04MGNkLTZiZGNiMTNlNzEyMCJ9" target="_blank">Open full screen ↗</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── MEDALS (CERTS) ── -->
+  <section id="certifications">
+    <div class="sec-header reveal">
+      <div class="sec-num">— V —</div>
+      <div class="sec-title">Ship's Medals</div>
+      <div class="sec-line"></div>
+      <div class="sec-ornament">🏅</div>
+    </div>
+    <div class="medals-grid">
+      <div class="medal-card reveal">
+        <span class="medal-icon">☁</span>
+        <div class="medal-name">Azure Data Fundamentals</div>
+        <div class="medal-exam">Exam DP-900</div>
+        <div class="medal-issuer">Microsoft</div>
+      </div>
+      <div class="medal-card reveal">
+        <span class="medal-icon">📊</span>
+        <div class="medal-name">Power BI Data Analyst</div>
+        <div class="medal-exam">Exam PL-300</div>
+        <div class="medal-issuer">Microsoft</div>
+      </div>
+      <div class="medal-card reveal">
+        <span class="medal-icon">🎓</span>
+        <div class="medal-name">Advanced Power BI</div>
+        <div class="medal-exam">Professional Certificate</div>
+        <div class="medal-issuer">LinkedIn Learning</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── EDUCATION ── -->
+  <section id="education">
+    <div class="sec-header reveal">
+      <div class="sec-num">— VI —</div>
+      <div class="sec-title">Pirate Academy</div>
+      <div class="sec-line"></div>
+      <div class="sec-ornament">📜</div>
+    </div>
+    <div class="edu-scrolls">
+      <div class="edu-scroll reveal">
+        <div class="edu-type-label">Undergraduate</div>
+        <div class="edu-degree">Bachelor of Technology</div>
+        <div class="edu-school">Lovely Professional University, Jalandhar</div>
+        <div class="edu-badges"><span class="edu-badge">2016</span><span class="edu-badge">8.47 CGPA</span></div>
+      </div>
+      <div class="edu-scroll reveal">
+        <div class="edu-type-label">Senior Secondary (HSC)</div>
+        <div class="edu-degree">Class XII</div>
+        <div class="edu-school">St. Xavier's Public School, Gorakhpur</div>
+        <div class="edu-badges"><span class="edu-badge">2011</span><span class="edu-badge">80%</span></div>
+      </div>
+      <div class="edu-scroll reveal">
+        <div class="edu-type-label">Secondary (SSC)</div>
+        <div class="edu-degree">Class X</div>
+        <div class="edu-school">St. Xavier's Public School, Gorakhpur</div>
+        <div class="edu-badges"><span class="edu-badge">2009</span><span class="edu-badge">87%</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── DEN DEN MUSHI (CONTACT) ── -->
+  <section id="contact">
+    <div class="sec-header reveal">
+      <div class="sec-num">— VII —</div>
+      <div class="sec-title">Den Den Mushi</div>
+      <div class="sec-line"></div>
+      <div class="sec-ornament">🐌</div>
+    </div>
+    <div class="contact-grid">
+      <div class="contact-left reveal">
+        <h3>Let's build<br>something legendary.</h3>
+        <p>Every great voyage needs a navigator and a crew. Whether you have data to harmonize, pipelines to build, or insights to unlock — send a message via Den Den Mushi. I'm open to data engineering roles, freelance projects and collaborations.</p>
+        <div class="domain-tags">
+          <span class="domain-tag">⚓ Insurance</span>
+          <span class="domain-tag">⚕ Pharmaceutical</span>
+          <span class="domain-tag">👥 Staffing</span>
+          <span class="domain-tag">💻 Technology</span>
         </div>
       </div>
       <div class="contact-links reveal">
-        <a href="mailto:naushada264@gmail.com" class="contact-link"><div class="contact-link-icon">&#9993;</div><div class="contact-link-body"><h4>Email</h4><span>naushada264@gmail.com</span></div></a>
-        <a href="tel:+917007376730" class="contact-link"><div class="contact-link-icon">&#128222;</div><div class="contact-link-body"><h4>Phone</h4><span>+91 7007376730</span></div></a>
-        <a href="https://linkedin.com/in/naushad264" target="_blank" class="contact-link"><div class="contact-link-icon">&#128188;</div><div class="contact-link-body"><h4>LinkedIn</h4><span>linkedin.com/in/naushad264</span></div></a>
-        <a href="https://github.com/naushad264" target="_blank" class="contact-link"><div class="contact-link-icon">&#128025;</div><div class="contact-link-body"><h4>GitHub</h4><span>github.com/naushad264</span></div></a>
+        <a href="mailto:naushada264@gmail.com" class="contact-link">
+          <div class="cl-icon">✉</div>
+          <div><div class="cl-label">Email</div><div class="cl-val">naushada264@gmail.com</div></div>
+        </a>
+        <a href="tel:+917007376730" class="contact-link">
+          <div class="cl-icon">📞</div>
+          <div><div class="cl-label">Phone</div><div class="cl-val">+91 7007376730</div></div>
+        </a>
+        <a href="https://linkedin.com/in/naushad264" target="_blank" class="contact-link">
+          <div class="cl-icon">💼</div>
+          <div><div class="cl-label">LinkedIn</div><div class="cl-val">linkedin.com/in/naushad264</div></div>
+        </a>
+        <a href="https://github.com/naushad264" target="_blank" class="contact-link">
+          <div class="cl-icon">🐙</div>
+          <div><div class="cl-label">GitHub</div><div class="cl-val">github.com/naushad264</div></div>
+        </a>
       </div>
     </div>
   </section>
 
+  <!-- Footer -->
   <footer>
-    <div class="footer-copy">&copy; 2025 Shaikh Naushad. All rights reserved.</div>
-    <a href="#" class="footer-back">&uarr; Back to top</a>
+    ☠ &nbsp; I'm gonna be the Data Pirate King! &nbsp; ☠
+    <div class="footer-sub">© 2025 Shaikh Naushad · All Rights Reserved</div>
+    <a href="#" class="footer-back">↑ Back to the helm</a>
   </footer>
 
   <script>
-    var reveals = document.querySelectorAll('.reveal');
-    var observer = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
+    // Scroll reveal
+    const obs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
         if (entry.isIntersecting) {
-          var siblings = Array.from(entry.target.parentElement.querySelectorAll('.reveal'));
-          entry.target.style.transitionDelay = (siblings.indexOf(entry.target) * 0.08) + 's';
+          const siblings = Array.from(entry.target.parentElement.querySelectorAll('.reveal'));
+          entry.target.style.transitionDelay = (siblings.indexOf(entry.target) * 0.1) + 's';
           entry.target.classList.add('visible');
-          observer.unobserve(entry.target);
+          obs.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.12 });
-    reveals.forEach(function(el) { observer.observe(el); });
+    }, { threshold: 0.1 });
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
 
-    var skillFills = document.querySelectorAll('.skill-fill');
-    var skillObserver = new IntersectionObserver(function(entries) {
-      entries.forEach(function(entry) {
+    // Devil fruit fill on scroll
+    const fruitObs = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
         if (entry.isIntersecting) {
-          entry.target.style.width = entry.target.dataset.width + '%';
-          skillObserver.unobserve(entry.target);
+          entry.target.querySelectorAll('.fruit-fill').forEach(fill => {
+            fill.style.width = fill.dataset.width + '%';
+          });
+          fruitObs.unobserve(entry.target);
         }
       });
-    }, { threshold: 0.3 });
-    skillFills.forEach(function(f) { skillObserver.observe(f); });
-
-    var nav = document.querySelector('nav');
-    window.addEventListener('scroll', function() {
-      nav.style.padding = window.scrollY > 60 ? '12px 60px' : '20px 60px';
-      nav.style.background = window.scrollY > 60 ? 'rgba(4,9,15,0.97)' : 'rgba(4,9,15,0.82)';
-    });
+    }, { threshold: 0.2 });
+    document.querySelectorAll('#skills').forEach(el => fruitObs.observe(el));
   </script>
+
 </body>
 </html>
